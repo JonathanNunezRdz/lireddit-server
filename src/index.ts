@@ -114,7 +114,11 @@ const main = async () => {
 		httpServer.listen({ port: parseInt(process.env.PORT) }, resolve)
 	);
 	console.log(
-		`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`
+		`🚀 Server ready at http://localhost:4000${
+			apolloServer.graphqlPath
+		} in ${
+			process.env.NODE_ENV === 'production' ? 'production' : 'development'
+		}`
 	);
 
 	// const postRepository = orm.em.getRepository(Post);
