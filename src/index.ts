@@ -35,10 +35,14 @@ const main = async () => {
 	const conn = await createConnection({
 		type: 'postgres',
 		url: process.env.DATABASE_URL,
-		logging: true,
+		logging: !__prod__,
 		// synchronize: true,
 		entities: [Post, User, Updoot],
 		migrations: [join(__dirname, './migrations/*')],
+		ssl: {
+			rejectUnauthorized: false,
+			requestCert: true,
+		},
 	});
 	await conn.runMigrations();
 	// await Post.delete({});
