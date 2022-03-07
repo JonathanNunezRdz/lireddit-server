@@ -1,6 +1,7 @@
 import {
 	ApolloServerPluginDrainHttpServer,
 	ApolloServerPluginLandingPageGraphQLPlayground,
+	ApolloServerPluginLandingPageProductionDefault,
 } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import connectRedis from 'connect-redis';
@@ -92,7 +93,9 @@ const main = async () => {
 		}),
 		plugins: [
 			ApolloServerPluginDrainHttpServer({ httpServer }),
-			ApolloServerPluginLandingPageGraphQLPlayground(),
+			process.env.NOVE_ENV === 'production'
+				? ApolloServerPluginLandingPageProductionDefault()
+				: ApolloServerPluginLandingPageGraphQLPlayground(),
 		],
 		context: ({ req, res }): MyContext => ({
 			req,
