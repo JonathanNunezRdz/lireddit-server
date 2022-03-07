@@ -11,6 +11,7 @@ import express from 'express';
 import session from 'express-session';
 import { createServer } from 'http';
 import Redis from 'ioredis';
+import { AddressInfo } from 'net';
 import { join } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
@@ -40,10 +41,12 @@ const main = async () => {
 		// synchronize: true,
 		entities: [Post, User, Updoot],
 		migrations: [join(__dirname, './migrations/*')],
-		ssl: {
-			rejectUnauthorized: false,
-			requestCert: __prod__,
-		},
+		ssl: __prod__
+			? {
+					rejectUnauthorized: false,
+					requestCert: __prod__,
+			  }
+			: undefined,
 	});
 	await conn.runMigrations();
 	// await Post.delete({});
@@ -116,8 +119,12 @@ const main = async () => {
 		httpServer.listen({ port: parseInt(process.env.PORT) }, resolve)
 	);
 
+	const address =
+		typeof httpServer.address() === 'object'
+			? (httpServer.address() as AddressInfo)
+			: null;
 	console.log(
-		`🚀 Server ready at ${httpServer.address()}${
+		`🚀 Server ready at ${address?.address}:${address?.port}${
 			apolloServer.graphqlPath
 		} in ${__prod__ ? 'production' : 'development'}`
 	);
