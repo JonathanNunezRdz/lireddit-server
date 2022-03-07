@@ -42,7 +42,7 @@ const main = async () => {
 		migrations: [join(__dirname, './migrations/*')],
 		ssl: {
 			rejectUnauthorized: false,
-			requestCert: true,
+			requestCert: __prod__,
 		},
 	});
 	await conn.runMigrations();
@@ -74,6 +74,7 @@ const main = async () => {
 				httpOnly: true,
 				sameSite: 'lax', // csrf
 				secure: __prod__, // cookie only works in https when in production
+				domain: __prod__ ? '.vercel.app' : undefined,
 			},
 			saveUninitialized: false,
 			secret: process.env.SESSION_SECRET,
@@ -93,7 +94,7 @@ const main = async () => {
 		}),
 		plugins: [
 			ApolloServerPluginDrainHttpServer({ httpServer }),
-			process.env.NOVE_ENV === 'production'
+			__prod__
 				? ApolloServerPluginLandingPageProductionDefault()
 				: ApolloServerPluginLandingPageGraphQLPlayground(),
 		],
@@ -110,15 +111,15 @@ const main = async () => {
 	});
 	await apolloServer.start();
 	apolloServer.applyMiddleware({ app, cors: false });
+
 	await new Promise<void>((resolve) =>
 		httpServer.listen({ port: parseInt(process.env.PORT) }, resolve)
 	);
+
 	console.log(
-		`🚀 Server ready at http://localhost:4000${
+		`🚀 Server ready at ${httpServer.address()}${
 			apolloServer.graphqlPath
-		} in ${
-			process.env.NODE_ENV === 'production' ? 'production' : 'development'
-		}`
+		} in ${__prod__ ? 'production' : 'development'}`
 	);
 
 	// const postRepository = orm.em.getRepository(Post);
