@@ -14,8 +14,8 @@ async function sendEmail(to: string, html: string) {
 	let transporter = nodemailer.createTransport({
 		service: 'SendinBlue',
 		auth: {
-			user: 'jonathannunezr1@gmail.com', // generated ethereal user
-			pass: 'rR59bQNqxpYAsydZ', // generated ethereal password
+			user: process.env.NODEMAILER_USER, // generated ethereal user
+			pass: process.env.NODEMAILER_PASSWORD, // generated ethereal password
 			// api key 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
 		},
 	});
