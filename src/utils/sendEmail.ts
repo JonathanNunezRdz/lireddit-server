@@ -16,13 +16,14 @@ async function sendEmail(to: string, html: string) {
 		auth: {
 			user: process.env.NODEMAILER_USER, // generated ethereal user
 			pass: process.env.NODEMAILER_PASSWORD, // generated ethereal password
-			// api key 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
 		},
 	});
 
+	const username = process.env.NODEMAILER_USERNAME.replace('_', ' ');
+
 	// send mail with defined transport object
 	let info = await transporter.sendMail({
-		from: '"Jonathan Nunez" <jonathannunezr1@gmail.com>', // sender address
+		from: `"${username}" <${process.env.NODEMAILER_USER}>`, // sender address
 		to, // list of receivers
 		subject: 'Change password', // Subject line
 		html,

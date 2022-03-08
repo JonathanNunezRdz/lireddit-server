@@ -7,6 +7,7 @@ declare global {
       SESSION_SECRET: string;
       CORS_ORIGIN: string;
       NODEMAILER_USER: string;
+      NODEMAILER_USERNAME: string;
       NODEMAILER_PASSWORD: string;
     }
   }
