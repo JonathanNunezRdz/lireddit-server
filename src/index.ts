@@ -76,7 +76,7 @@ const main = async () => {
 				maxAge: 1000 * 60 * 60 * 24 * 365 * 1, // 1 year
 				httpOnly: true,
 				sameSite: 'lax', // csrf
-				secure: __prod__, // cookie only works in https when in production
+				secure: false, // cookie only works in https when in production
 				domain: __prod__ ? '.the-wia.xyz' : undefined,
 			},
 			saveUninitialized: false,
