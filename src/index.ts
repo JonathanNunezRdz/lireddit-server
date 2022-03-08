@@ -74,10 +74,10 @@ const main = async () => {
 			}),
 			cookie: {
 				maxAge: 1000 * 60 * 60 * 24 * 365 * 1, // 1 year
-				httpOnly: !__prod__,
+				httpOnly: true,
 				sameSite: 'lax', // csrf
 				secure: __prod__, // cookie only works in https when in production
-				domain: __prod__ ? '.vercel.app' : undefined,
+				domain: __prod__ ? '.the-wia.xyz' : undefined,
 			},
 			saveUninitialized: false,
 			secret: process.env.SESSION_SECRET,
