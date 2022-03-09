@@ -229,19 +229,14 @@ class UserResolver {
 				],
 			};
 
-		// console.log('before setting userId', req);
-		// -mVuRgW406KMIo4NX77wAwvtkP4eG1QH
-
 		// create a session for that user
 		req.session.userId = user.id;
-		// console.log('after setting userId', req);
-
 		return { user };
 	}
 
 	@Mutation(() => Boolean)
-	logout(@Ctx() { req, res }: MyContext): Promise<Boolean> {
-		return new Promise<Boolean>((resolve) =>
+	logout(@Ctx() { req, res }: MyContext): Promise<boolean> {
+		return new Promise<boolean>((resolve) =>
 			req.session.destroy((err) => {
 				res.clearCookie(COOKIE_NAME);
 				if (err) {
