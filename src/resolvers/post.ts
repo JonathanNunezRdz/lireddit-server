@@ -122,41 +122,6 @@ class PostResolver {
 		}
 
 		return false;
-
-		// const complete = await getManager().transaction<boolean>(
-		// 	async (em) => {
-		// 		const userRepo = em.getRepository(User);
-		// 		const postRepo = em.getRepository(Post);
-		// 		const updootRepo = em.getRepository(Updoot);
-
-		// 		const user = await userRepo.findOneOrFail(
-		// 			userId
-		// 		);
-		// 		const post = await postRepo.findOneOrFail(
-		// 			postId
-		// 		);
-
-		// 		try {
-		// 			await updootRepo.insert({
-		// 				user,
-		// 				post,
-		// 				value: realValue,
-		// 			});
-		// 		} catch (error) {
-		// 			return false;
-		// 		}
-
-		// 		await postRepo.increment(
-		// 			{
-		// 				id: postId,
-		// 			},
-		// 			'points',
-		// 			realValue
-		// 		);
-
-		// 		return true;
-		// 	}
-		// );
 	}
 
 	@Query(() => PaginatedPosts)
@@ -167,16 +132,10 @@ class PostResolver {
 	): Promise<PaginatedPosts> {
 		const realLimit = Math.min(50, limit);
 		const realLimitPlusOne = realLimit + 1;
-
-		// console.log('request', req);
-		// NA1w7zuWNYeldpj1smq_-HOtd7NQIMpP
-		// kMOZJDWCd2VW2m1rZ_DLQ4PVCabu3bJo
-
 		const replacements: any[] = [
 			realLimitPlusOne,
 			cursor || new Date().toISOString(),
 		];
-
 		const posts = await getConnection().query(
 			`
 			SELECT p.*
@@ -187,45 +146,7 @@ class PostResolver {
 		`,
 			replacements
 		);
-
-		// const qb = getRepository(Post)
-		// 	.createQueryBuilder('p')
-		// 	// .innerJoinAndSelect(
-		// 	// 	'p.creator',
-		// 	// 	'u',
-		// 	// 	'u.id = p."creatorId"'
-		// 	// )
-		// 	.orderBy('p."createdAt"', 'DESC')
-		// 	.take(realLimitPlusOne);
-
-		// if (cursor) qb.where('p."createdAt" < :cursor', { cursor });
-		// const posts = await qb.getMany();
-
-		// const posts = await postRepository.find({
-		// 	where: {
-		// 		createdAt: LessThan(cursor || new Date().toISOString()),
-		// 		updoots: {
-		// 			userId: req.session.userId,
-		// 		},
-		// 	},
-		// 	order: { createdAt: 'DESC' },
-		// 	take: realLimitPlusOne,
-		// 	relations: ['creator', 'updoots'],
-		// });
-
 		const sendPosts = posts.slice(0, realLimit);
-
-		// const sendPosts = posts.slice(0, realLimit).map((post: Post) => {
-		// 	return {
-		// 		...post,
-		// 		creator: {
-		// 			...post.creator,
-		// 			createdAt: new Date(post.creator.createdAt),
-		// 			updatedAt: new Date(post.creator.updatedAt),
-		// 		},
-		// 	};
-		// });
-
 		return {
 			posts: sendPosts,
 			hasMore: posts.length === realLimitPlusOne,
